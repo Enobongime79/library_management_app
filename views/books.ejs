@@ -152,37 +152,41 @@
             <input id="searchBar" type="text" placeholder="Search by title" class="lg:w-[32vw] w-full font-[DM_Sans] px-2 py-2 text-sm focus:outline-none bg-white rounded-lg h-8">
           </div>
         </div>
-        <div class="flex flex-col mt-4 text-sm">
+        <div class="flex flex-col overflow-x-auto w-full mt-4 text-sm">
           <p class="font-bold text-xs pb-4 text-[#8a8a8a]">LISTING 5 BOOKS</p>
-          <table id="bookTable" class="w-full text-sm font-semibold font-[Zalando_Sans_SemiExpanded] rounded-lg ">
-            <tr class="text-[#454749] rounded border border-[#DCE0E5] w-full">
-              <td class="py-2 ps-4 w-2/12 text-black">Title</td>
-              <td class="py-2 px-4 w-2/12 text-black text-center">Author</td>
-              <td class="py-2 px-4 w-2/12 text-black text-center">Genre</td>
-              <td class="py-2 px-4 w-1/12 text-black text-center">Published</td>
-              <td class="py-2 px-4 w-2/12 text-black text-center">Availability</td>
-              <td class="text-right w-2/12 py-2 px-4 text-black">Actions</td>
-            </tr>
-            <% for (let i = 0; i < books.length; i++){ %>
-            <tr data-id="<%= i%>" class="text-[#27292b] book font-light font-[DM_Sans] rounded border border-[#DCE0E5] w-full">
-              <td class="py-2 ps-4 w-2/6 text-sm text-[#27292b]"><%= books[i]["title"] %></td>
-              <td class="py-2 px-4 w-2/6 text-[#27292b] text-center"><%= books[i]["author"]%></td>
-              <td class="py-2 px-4 w-3/6 text-[#27292b] text-center"><%= books[i]["genre"]%></td>
-              <td class="py-2 px-4 w-1/6 text-[#27292b] text-center"><%= books[i]["year_published"]%></td>
-              <td class="py-2 px-4 w-2/6 text-[#27292b] text-center"><%= books[i]["availability"]%></td>
-              <td class="text-right w-1/6 py-2 pe-4 text-[#27292b]">
+          <table id="bookTable" class="w-full text-sm font-semibold font-[Zalando_Sans_SemiExpanded] rounded-lg">
+              <tr class="text-[#454749] rounded border border-[#DCE0E5] w-full">
+                <td class="py-2 ps-4 w-2/12 text-black">Title</td>
+                <td class="py-2 px-4 w-2/12 text-black text-center hidden sm:table-cell">Author</td>
+                <td class="py-2 px-4 w-2/12 text-black text-center hidden md:table-cell">Genre</td>
+                <td class="py-2 px-4 w-1/12 text-black text-center hidden md:table-cell">Published</td>
+                <td class="py-2 px-4 w-2/12 text-black text-center hidden sm:table-cell">Availability</td>
+                <td class="text-right w-2/12 py-2 px-4 text-black">Actions</td>
+              </tr>
+              <% for (let i = 0; i < books.length; i++){ %>
+              <tr data-id="<%= i%>" class="text-[#27292b] book font-light font-[DM_Sans] rounded border border-[#DCE0E5] w-full">
+                <td class="py-2 ps-4 w-2/6 text-sm text-[#27292b]">
+                  <%= books[i]["title"] %>
+                  <span class="block text-xs text-[#27292b] sm:hidden"><%= books[i]["author"] %></span>
+                  <span class="block text-xs text-[#27292b] sm:hidden"><%= books[i]["availability"] %></span>
+                </td>
+                <td class="py-2 px-4 w-2/6 text-[#27292b] text-center hidden sm:table-cell"><%= books[i]["author"]%></td>
+                <td class="py-2 px-4 w-3/6 text-[#27292b] text-center hidden md:table-cell"><%= books[i]["genre"]%></td>
+                <td class="py-2 px-4 w-1/6 text-[#27292b] text-center hidden md:table-cell"><%= books[i]["year_published"]%></td>
+                <td class="py-2 px-4 w-2/6 text-[#27292b] text-center hidden sm:table-cell"><%= books[i]["availability"]%></td>
+                <td class="text-right w-1/6 py-2 pe-4 text-[#27292b]">
                   <div class="flex flex-row gap-2">
-                      <button data-id="<%= books[i]["id"] %>" class="ms-auto editBtn hover:cursor-pointer hover:bg-[#22D3EE] rounded-4xl p-1.5">
-                          <img src="./images/edit.png" alt="" class="h-4 w-4 ms-auto">
-                      </button>
-                      <button data-id="<%= books[i]["id"] %>" class="hover:cursor-pointer deleteBtn hover:bg-[#F43F5E] p-1.5 rounded-4xl">
-                          <img src="./images/delete.png" alt="" class="h-4 w-4">
-                      </button>
+                    <button data-id="<%= books[i]["id"] %>" class="ms-auto editBtn hover:cursor-pointer hover:bg-[#22D3EE] rounded-4xl p-1.5">
+                      <img src="./images/edit.png" alt="" class="h-4 w-4 ms-auto">
+                    </button>
+                    <button data-id="<%= books[i]["id"] %>" class="hover:cursor-pointer deleteBtn hover:bg-[#F43F5E] p-1.5 rounded-4xl">
+                      <img src="./images/delete.png" alt="" class="h-4 w-4">
+                    </button>
                   </div>
-              </td>
-            </tr>
-            <% } %>
-          </table>
+                </td>
+              </tr>
+              <% } %>
+            </table>
           <hr class="mt-4 border-[#DCE0E5]">
           <div class="flex flex-row mt-4 text-black">
             <p id="infoText"></p>

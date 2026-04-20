@@ -95,31 +95,34 @@
             <input id="searchBar" type="text" placeholder="Search by author name" class="lg:w-[32vw] font-[DM_Sans] w-full px-2 py-2 text-sm focus:outline-none bg-white rounded-lg h-8">
           </div>
         </div>
-        <div class="flex flex-col mt-4 text-sm">
+        <div class="flex flex-col mt-4 text-sm overflow-x-auto w-full">
           <p class="font-bold text-xs pb-4 text-[#8a8a8a]">LISTING 5 AUTHORS</p>
-          <table id="authorTable" class="w-full text-sm font-semibold font-[Zalando_Sans_SemiExpanded] rounded-lg ">
-            <tr class="text-[#454749] rounded border border-[#DCE0E5] w-full">
-              <td class="py-2 px-4 w-2/6 text-black">Name</td>
-              <td class="py-2 px-4 w-2/6 text-black text-center">#Books</td>
-              <td class="text-right w-2/6 py-2 px-4 text-black">Actions</td>
-            </tr>
-            <% for (let i = 0; i < authors.length; i++){ %>
-            <tr class="text-[#27292b] author font-light font-[DM_Sans] rounded border border-[#DCE0E5] w-full">
-              <td class="py-2 px-4 w-2/6 text-sm text-[#27292b]"><%= authors[i]["full_name"] %></td>
-              <td class="py-2 px-4 w-2/6 text-[#27292b] text-center"><%= authors[i]["total_books"]%></td>
-              <td class="text-right w-2/6 py-2 px-4 text-[#27292b]">
+          <table id="authorTable" class="w-full text-sm font-semibold font-[Zalando_Sans_SemiExpanded] rounded-lg">
+              <tr class="text-[#454749] rounded border border-[#DCE0E5] w-full">
+                <td class="py-2 px-4 w-2/6 text-black">Name</td>
+                <td class="py-2 px-4 w-2/6 text-black text-center hidden sm:table-cell">#Books</td>
+                <td class="text-right w-2/6 py-2 px-4 text-black">Actions</td>
+              </tr>
+              <% for (let i = 0; i < authors.length; i++){ %>
+              <tr class="text-[#27292b] author font-light font-[DM_Sans] rounded border border-[#DCE0E5] w-full">
+                <td class="py-2 px-4 w-2/6 text-sm text-[#27292b]">
+                  <%= authors[i]["full_name"] %>
+                  <span class="block text-xs text-[#27292b] sm:hidden"><%= authors[i]["total_books"] %> books</span>
+                </td>
+                <td class="py-2 px-4 w-2/6 text-[#27292b] text-center hidden sm:table-cell"><%= authors[i]["total_books"]%></td>
+                <td class="text-right w-2/6 py-2 px-4 text-[#27292b]">
                   <div class="flex flex-row gap-2">
-                      <button data-id="<%= authors[i]["id"] %>" class="ms-auto editBtn hover:cursor-pointer hover:bg-[#22D3EE] rounded-4xl p-1.5">
-                          <img src="./images/edit.png" alt="" class="h-4 ms-auto">
-                      </button>
-                      <button data-id="<%= authors[i]["id"] %>" class="hover:cursor-pointer deleteBtn hover:bg-[#F43F5E] p-1.5 rounded-4xl">
-                          <img src="./images/delete.png" alt="" class="h-4">
-                      </button>
+                    <button data-id="<%= authors[i]["id"] %>" class="ms-auto editBtn hover:cursor-pointer hover:bg-[#22D3EE] rounded-4xl p-1.5">
+                      <img src="./images/edit.png" alt="" class="h-4 ms-auto">
+                    </button>
+                    <button data-id="<%= authors[i]["id"] %>" class="hover:cursor-pointer deleteBtn hover:bg-[#F43F5E] p-1.5 rounded-4xl">
+                      <img src="./images/delete.png" alt="" class="h-4">
+                    </button>
                   </div>
-              </td>
-            </tr>
-            <% } %>
-          </table>
+                </td>
+              </tr>
+              <% } %>
+            </table>
           <hr class="mt-4 border-[#DCE0E5]">
           <div class="flex flex-row mt-4 text-black">
             <p id="infoText"></p>

@@ -127,11 +127,11 @@
       <div class="lg:pt-12 pt-8 lg:mx-24 px-4 flex flex-col lg:w-5/6 w-screen">
         <div class="flex flex-row items-center">
           <div>
-            <h1 class="font-bold lg:text-3xl text-2xl">Borrow Records</h1>
+            <h1 class="font-bold lg:text-3xl text-xl">Borrow Records</h1>
             <p class="text-[#888888] font-[DM_Sans] text-sm hidden lg:flex">Track and manage book lending activities across the library.</p>
           </div>
           <div class="ms-auto">
-            <button id="addBook" class="text-white text-sm hover:cursor-pointer hover:bg-blue-600 bg-blue-500 px-2 py-1 rounded-lg items-center flex flex-row"><span class="text-lg">+</span> &nbsp; Add Borrow Record</button>
+            <button id="addBook" class="text-white text-xs lg:text-sm hover:cursor-pointer hover:bg-blue-600 bg-blue-500 px-2 py-1 rounded-lg items-center flex flex-row"><span class="text-lg">+</span> &nbsp; Add Borrow Record</button>
           </div>
         </div>
         <div class="bg-[#F9FAFB] rounded-lg lg:w-[64%] w-full mt-4 lg:px-2 lg:py-2 px-4 gap-2 py-2 flex flex-row items-center">
@@ -140,59 +140,60 @@
             <input id="searchBar" type="text" placeholder="Search by borrower name" class="lg:w-[32vw] w-full font-[DM_Sans] px-2 py-2 text-sm focus:outline-none bg-white rounded-lg h-8">
           </div>
         </div>
-        <div class="flex flex-col mt-4 text-sm">
-          <table id="bookTable" class="w-full text-sm font-semibold font-[Zalando_Sans_SemiExpanded] rounded-lg ">
-            <tr class="text-[#454749] rounded border border-[#DCE0E5] w-full">
-              <td class="py-2 ps-4 w-3/21 text-black text-start">Borrower</td>
-              <td class="py-2 px-4 w-4/21 text-black text-center">Book Title</td>
-              <td class="py-2 px-2 w-3/21 text-black text-center">Borrow Date</td>
-              <td class="py-2 px-2 w-3/21 text-black text-center">Return Date</td>
-              <td class="py-2 px-2 w-3/21 text-black text-center">Due Date</td>
-              <td class="py-2 px-4 w-1/21 text-black text-center">Status</td>
-              <td class="text-right w-2/21 py-2 px-4 text-black">Actions</td>
-            </tr>
-            <% for (let i = 0; i < borrows.length; i++){ %>
-            <tr data-id="<%= i%>" class="text-[#27292b] borrow font-light font-[DM_Sans] rounded border border-[#DCE0E5] w-full">
-              <td class="py-2 ps-4 w-3/21 text-sm text-[#27292b]"><%= borrows[i]["borrower"] %></td>
-              <td class="py-2 px-2 w-4/21 text-[#27292b] text-center"><%= borrows[i]["book_title"]%></td>
-              <% const borrowDate = borrows[i]["borrow_date"]; %>
-              <% const formattedBorrowDate = borrowDate.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) %>
-              <td class="py-2 px-4 w-3/21 text-[#27292b] text-center"><%= formattedBorrowDate %></td>
-              <% const returnDate = borrows[i]["return_date"]; %>
-              <% if (!returnDate){ %>
-                <td class="py-2 px-4 w-3/21 text-[#27292b] text-center">- -</td>
-              <% } else { %>
-                <% const formattedReturnDate = returnDate.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) %>
-                <td class="py-2 px-4 w-3/21 text-[#27292b] text-center"><%= formattedReturnDate %></td>
-              <% } %>
-
-              <% const dueDate = borrows[i]["due_date"]; %>
-              <% const formattedDueDate = dueDate.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) %>
-
-              <td class="py-2 px-4 w-3/21 text-[#27292b] text-center"><%= formattedDueDate %></td>
-              <% const today = new Date(); %>
-              <% let status; %>
-              <% if (returnDate && returnDate <= dueDate) { %>
-                <% status = "Returned" %>
-              <% } else if (today > dueDate) { %>
-                <% status = "Overdue" %>
-              <% } else { %>
-                <% status = "Borrowed" %>
-              <% } %>
-              <td class="py-2 px-4 w-1/21 text-[#27292b] text-center"><%= status %></td>
-              <td class="text-right w-2/21 py-2 pe-2 text-[#27292b]">
-                  <div class="flex flex-row gap-2">
+        <div class="flex overflow-x-auto w-full flex-col mt-4 text-sm">
+            <table id="bookTable" class="w-full text-sm font-semibold font-[Zalando_Sans_SemiExpanded] rounded-lg">
+                <tr class="text-[#454749] rounded border border-[#DCE0E5] w-full">
+                  <td class="py-2 ps-4 w-3/21 text-black text-start">Borrower</td>
+                  <td class="py-2 px-4 w-4/21 text-black text-center hidden sm:table-cell">Book Title</td>
+                  <td class="py-2 px-2 w-3/21 text-black text-center hidden md:table-cell">Borrow Date</td>
+                  <td class="py-2 px-2 w-3/21 text-black text-center hidden md:table-cell">Return Date</td>
+                  <td class="py-2 px-2 w-3/21 text-black text-center hidden lg:table-cell">Due Date</td>
+                  <td class="py-2 px-4 w-1/21 text-black text-center">Status</td>
+                  <td class="text-right w-2/21 py-2 px-4 text-black">Actions</td>
+                </tr>
+                <% for (let i = 0; i < borrows.length; i++){ %>
+                <tr data-id="<%= i%>" class="text-[#27292b] borrow font-light font-[DM_Sans] rounded border border-[#DCE0E5] w-full">
+                  <td class="py-2 ps-4 w-3/21 text-sm text-[#27292b]">
+                    <%= borrows[i]["borrower"] %>
+                    <span class="block text-xs text-[#27292b] sm:hidden"><%= borrows[i]["book_title"] %></span>
+                  </td>
+                  <td class="py-2 px-2 w-4/21 text-[#27292b] text-center hidden sm:table-cell"><%= borrows[i]["book_title"]%></td>
+                  <% const borrowDate = borrows[i]["borrow_date"]; %>
+                  <% const formattedBorrowDate = borrowDate.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) %>
+                  <td class="py-2 px-4 w-3/21 text-[#27292b] text-center hidden md:table-cell"><%= formattedBorrowDate %></td>
+                  <% const returnDate = borrows[i]["return_date"]; %>
+                  <% if (!returnDate){ %>
+                    <td class="py-2 px-4 w-3/21 text-[#27292b] text-center hidden md:table-cell">- -</td>
+                  <% } else { %>
+                    <% const formattedReturnDate = returnDate.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) %>
+                    <td class="py-2 px-4 w-3/21 text-[#27292b] text-center hidden md:table-cell"><%= formattedReturnDate %></td>
+                  <% } %>
+                  <% const dueDate = borrows[i]["due_date"]; %>
+                  <% const formattedDueDate = dueDate.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) %>
+                  <td class="py-2 px-4 w-3/21 text-[#27292b] text-center hidden lg:table-cell"><%= formattedDueDate %></td>
+                  <% const today = new Date(); %>
+                  <% let status; %>
+                  <% if (returnDate && returnDate <= dueDate) { %>
+                    <% status = "Returned" %>
+                  <% } else if (today > dueDate) { %>
+                    <% status = "Overdue" %>
+                  <% } else { %>
+                    <% status = "Borrowed" %>
+                  <% } %>
+                  <td class="py-2 px-4 w-1/21 text-[#27292b] text-center"><%= status %></td>
+                  <td class="text-right w-2/21 py-2 pe-2 text-[#27292b]">
+                    <div class="flex flex-row gap-2">
                       <button data-id="<%= borrows[i]["id"]%>" class="ms-auto editBtn hover:cursor-pointer hover:bg-[#22D3EE] rounded-4xl p-1.5">
-                          <img src="./images/edit.png" alt="" class="h-4 w-4 ms-auto">
+                        <img src="./images/edit.png" alt="" class="h-4 w-4 ms-auto">
                       </button>
                       <button data-id="<%= borrows[i]["id"]%>" class="hover:cursor-pointer deleteBtn hover:bg-[#F43F5E] p-1.5 rounded-4xl">
-                          <img src="./images/delete.png" alt="" class="h-4 w-4">
+                        <img src="./images/delete.png" alt="" class="h-4 w-4">
                       </button>
-                  </div>
-              </td>
-            </tr>
-            <% } %>
-          </table>
+                    </div>
+                  </td>
+                </tr>
+                <% } %>
+              </table>
           <hr class="mt-4 border-[#DCE0E5]">
           <div class="flex flex-row mt-4 text-black">
             <p id="infoText"></p>
