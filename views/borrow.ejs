@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Lora:ital,wght@0,400..700;1,400..700&family=Manrope:wght@200..800&family=Vend+Sans:ital,wght@0,300..700;1,300..700&family=Zalando+Sans+SemiExpanded:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+  </head>
+  <body>
+
+    <div id="modal" class="bg-black/80 hidden fixed top-0 h-full items-center flex justify-center w-full z-100 font-[Zalando_Sans_SemiExpanded]">
+      <form method="post" action="/borrow" id="addBorrowerForm" class="bg-white lg:w-1/3 w-7/8 rounded-lg px-4 pt-4 flex flex-col pb-4">
+        <h1 class="font-bold text-2xl">Add Borrow Record</h1>
+        <p class="text-sm font-[DM_Sans] text-[#8a8a8a]">Enter the details below to record a new book lending transaction.</p>
+        <hr class="-mx-4 mt-4 mb-4 border-[#DCE0E5]">
+        <div>
+          <p class="text-sm font-semibold text-[#161A1D]">Book</p>
+        </div>
+        <select name="book" id="book" type="text" class="w-full text-sm mt-2 px-2 py-2 font-[DM_Sans] focus:outline-none border border-[#DCE0E5] rounded">
+            <option class="font-[DM_Sans] text-sm" value=""> -- </option>
+            <% for (let i = 0; i < books.length; i++) { %>
+                <option class="font-[DM_Sans] text-sm" value="<%= books[i]['title'] %>"> <%= books[i]['title'] %> </option>
+            <% } %>
+        </select>
+
+        <div>
+          <p class="text-sm font-semibold text-[#161A1D] mt-4">Borrower Name</p>
+        </div>
+        <input id="borrowerName" name="borrowerName" type="text" class="w-full text-sm mt-2 px-2 py-2 font-[DM_Sans] focus:outline-none border border-[#DCE0E5] rounded">
+
+        <div class="flex flex-row gap-4">
+            <div class="w-1/2">
+                <p class="text-sm font-semibold text-[#161A1D] mt-4">Borrow Date</p>
+                <input id="borrowDate" name="borrowDate" placeholder="e.g. Fiction, Science" type="date" class="w-full text-sm mt-2 px-2 py-2 font-[DM_Sans] focus:outline-none border border-[#DCE0E5] rounded">
+            </div>
+            <div class="w-1/2">
+                <p class="text-sm font-semibold text-[#161A1D] mt-4">Due Date</p>
+                <input name="dueDate" type="date" placeholder="e.g. 2002" class="w-full text-sm mt-2 px-2 py-2 font-[DM_Sans] focus:outline-none border border-[#DCE0E5] rounded">
+                <p class="text-xs font-[DM_Sans] mt-2 text-gray-500">Leave blank if not yet returned.</p>
+            </div>
+        </div>
+
+        <div class="ms-auto text-sm mt-4 items-center flex flex-row gap-4">
+          <button type="button" id="closeModal" class="px-4 py-2 rounded border border-[#DCE0E5] hover:bg-black font-semibold hover:text-white">Cancel</button>
+          <button type="submit" id="submitButton" class="px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-800 font-semibold">Save Changes</button>
+        </div>
+
+      </form>
+    </div>
+
+    <div id="editModal" class="bg-black/80 hidden fixed top-0 h-full items-center flex justify-center w-full z-100 font-[Zalando_Sans_SemiExpanded]">
+      <form method="post" action="/" id="editBorrowerForm" class="bg-white lg:w-1/3 w-7/8 rounded-lg px-4 pt-4 flex flex-col pb-4">
+          <h1 class="font-bold text-2xl">Edit Borrow Record</h1>
+          <p class="text-sm font-[DM_Sans] text-[#8a8a8a]">Edit the details of book lending transaction.</p>
+          <hr class="-mx-4 mt-4 mb-4 border-[#DCE0E5]">
+          <div>
+            <p class="text-sm font-semibold text-[#161A1D]">Book</p>
+          </div>
+          <select name="editBook" id="editBook" type="text" class="w-full text-sm mt-2 px-2 py-2 font-[DM_Sans] focus:outline-none border border-[#DCE0E5] rounded">
+              <option class="font-[DM_Sans] text-sm" value=""> -- </option>
+              <% for (let i = 0; i < books.length; i++) { %>
+                  <option class="font-[DM_Sans] text-sm" value="<%= books[i]['title'] %>"> <%= books[i]['title'] %> </option>
+              <% } %>
+          </select>
+  
+          <div>
+            <p class="text-sm font-semibold text-[#161A1D] mt-4">Borrower Name</p>
+          </div>
+          <input id="editBorrowerName" name="editBorrowerName" type="text" class="w-full text-sm mt-2 px-2 py-2 font-[DM_Sans] focus:outline-none border border-[#DCE0E5] rounded">
+  
+          <div class="flex flex-row gap-4">
+              <div class="w-1/2">
+                  <p class="text-sm font-semibold text-[#161A1D] mt-4">Borrow Date</p>
+                  <input id="editBorrowDate" name="editBorrowDate" placeholder="e.g. Fiction, Science" type="date" class="w-full text-sm mt-2 px-2 py-2 font-[DM_Sans] focus:outline-none border border-[#DCE0E5] rounded">
+              </div>
+              <div class="w-1/2">
+                  <p class="text-sm font-semibold text-[#161A1D] mt-4">Due Date</p>
+                  <input id="editDueDate" name="editDueDate" type="date" placeholder="e.g. 2002" class="w-full text-sm mt-2 px-2 py-2 font-[DM_Sans] focus:outline-none border border-[#DCE0E5] rounded">
+                  <p class="text-xs font-[DM_Sans] mt-2 text-gray-500">Leave blank if not yet returned.</p>
+              </div>
+          </div>
+        <input id="editId" name="editId" type="hidden">
+        <input id="editAuthor" name="editAuthor" type="hidden">
+        <div class="ms-auto text-sm mt-4 items-center flex flex-row gap-4">
+          <button type="button" id="closeEditModal" class="px-4 py-2 rounded border border-[#DCE0E5] hover:bg-black font-semibold hover:text-white">Cancel</button>
+          <button type="button" id="editSubmitBtn" class="px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-800 font-semibold">Save Changes</button>
+        </div>
+
+      </form>
+    </div>    
+    
+    <div id="deleteModal" class="bg-black/80 hidden fixed top-0 h-full items-center flex justify-center w-full z-100 font-[Zalando_Sans_SemiExpanded]">
+      <div class="bg-white lg:w-1/3 w-7/8 rounded-lg px-4 pt-4 flex flex-col pb-4">
+          
+        <div class="flex flex-row gap-4 items-center">
+            <img class="h-12 rounded-full" src="./images/warning.png" alt="">
+            <div>
+                <h1 class="font-bold text-2xl">Delete Book</h1>
+                <p class="text-sm font-[DM_Sans] text-gray-800">This will delete the book and all its borrow records. This action cannot be undone.</p>
+            </div>
+        </div>
+
+        <div class="ms-auto text-sm mt-4 items-center flex flex-row gap-4">
+          <button type="button" id="cancelDeleteBtn" class="px-4 py-2 rounded border border-[#DCE0E5] hover:bg-black font-semibold hover:text-white">Cancel</button>
+          <button type="button" id="confirmDeleteBtn" class="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700 font-semibold">Delete</button>
+        </div>
+
+      </div>
+    </div>
+    
+    <div class="flex sticky top-0 bg-white w-full flex-row py-4 px-4 px-lg-6 font-[Zalando_Sans_SemiExpanded] border-b-[#E6E9ED] items-center border-b">
+      <img class="md:hidden h-4" src="./images/more.png" alt="">
+      <p class="ms-5 text-blue-500 font-bold text-xl">Library Admin</p>
+      
+      <button id="logoutBtn" class="text-black ms-auto me-5 text-sm hover:cursor-pointer hover:bg-black hover:text-white bg-blue-100 border border-[#DCE0E5] px-4 py-2 rounded-lg items-center flex flex-row"><a href="/logout">Logout</a></button>
+    </div>
+    <div class="flex-row  lg:flex font-[Zalando_Sans_SemiExpanded] ">
+      <div class="w-1/6 hidden lg:flex pt-12 px-4 font-[DM_Sans] bg-[#F9FAFB] h-screen border-e border-e-[#E6E9ED]">
+        <div class="flex flex-col items-center text-[#74797e] gap-1">
+          <a href="/authors" class="flex flex-row items-center gap-2 p-2 hover:bg-[#F3F4F6] hover:cursor-pointer rounded-lg w-48"> <img src="./images/writer.png" class="h-4" alt="">Authors</a>
+          <a href="/books" class="flex flex-row items-center gap-2 p-2 hover:bg-[#F3F4F6] hover:cursor-pointer rounded-lg w-48"> <img src="./images/book.png" class="h-4" alt="">Books</a>
+          <a href="/borrow" class="flex flex-row items-center gap-2 p-2 hover:bg-[#F3F4F6] hover:cursor-pointer bg-[#F3F4F6] rounded-lg w-48"> <img src="./images/time-left.png" class="h-4" alt="">Borrow Records</a>
+        </div>
+      </div>
+      <div class="lg:pt-12 pt-8 lg:mx-24 px-4 flex flex-col lg:w-5/6 w-screen">
+        <div class="flex flex-row items-center">
+          <div>
+            <h1 class="font-bold lg:text-3xl text-2xl">Borrow Records</h1>
+            <p class="text-[#888888] font-[DM_Sans] text-sm hidden lg:flex">Track and manage book lending activities across the library.</p>
+          </div>
+          <div class="ms-auto">
+            <button id="addBook" class="text-white text-sm hover:cursor-pointer hover:bg-blue-600 bg-blue-500 px-2 py-1 rounded-lg items-center flex flex-row"><span class="text-lg">+</span> &nbsp; Add Borrow Record</button>
+          </div>
+        </div>
+        <div class="bg-[#F9FAFB] rounded-lg lg:w-[64%] w-full mt-4 lg:px-2 lg:py-2 px-4 gap-2 py-2 flex flex-row items-center">
+          <div class="flex flex-row items-center bg-white border border-[#DCE0E5] px-2 w-full rounded focus:outline-2 focus:outline-[#EDEFF2]">
+            <img class="h-4" src="./images/search-interface-symbol.png" alt="">
+            <input id="searchBar" type="text" placeholder="Search by borrower name" class="lg:w-[32vw] w-full font-[DM_Sans] px-2 py-2 text-sm focus:outline-none bg-white rounded-lg h-8">
+          </div>
+        </div>
+        <div class="flex flex-col mt-4 text-sm">
+          <table id="bookTable" class="w-full text-sm font-semibold font-[Zalando_Sans_SemiExpanded] rounded-lg ">
+            <tr class="text-[#454749] rounded border border-[#DCE0E5] w-full">
+              <td class="py-2 ps-4 w-3/21 text-black text-start">Borrower</td>
+              <td class="py-2 px-4 w-4/21 text-black text-center">Book Title</td>
+              <td class="py-2 px-2 w-3/21 text-black text-center">Borrow Date</td>
+              <td class="py-2 px-2 w-3/21 text-black text-center">Return Date</td>
+              <td class="py-2 px-2 w-3/21 text-black text-center">Due Date</td>
+              <td class="py-2 px-4 w-1/21 text-black text-center">Status</td>
+              <td class="text-right w-2/21 py-2 px-4 text-black">Actions</td>
+            </tr>
+            <% for (let i = 0; i < borrows.length; i++){ %>
+            <tr data-id="<%= i%>" class="text-[#27292b] borrow font-light font-[DM_Sans] rounded border border-[#DCE0E5] w-full">
+              <td class="py-2 ps-4 w-3/21 text-sm text-[#27292b]"><%= borrows[i]["borrower"] %></td>
+              <td class="py-2 px-2 w-4/21 text-[#27292b] text-center"><%= borrows[i]["book_title"]%></td>
+              <% const borrowDate = borrows[i]["borrow_date"]; %>
+              <% const formattedBorrowDate = borrowDate.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) %>
+              <td class="py-2 px-4 w-3/21 text-[#27292b] text-center"><%= formattedBorrowDate %></td>
+              <% const returnDate = borrows[i]["return_date"]; %>
+              <% if (!returnDate){ %>
+                <td class="py-2 px-4 w-3/21 text-[#27292b] text-center">- -</td>
+              <% } else { %>
+                <% const formattedReturnDate = returnDate.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) %>
+                <td class="py-2 px-4 w-3/21 text-[#27292b] text-center"><%= formattedReturnDate %></td>
+              <% } %>
+
+              <% const dueDate = borrows[i]["due_date"]; %>
+              <% const formattedDueDate = dueDate.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) %>
+
+              <td class="py-2 px-4 w-3/21 text-[#27292b] text-center"><%= formattedDueDate %></td>
+              <% const today = new Date(); %>
+              <% let status; %>
+              <% if (returnDate && returnDate <= dueDate) { %>
+                <% status = "Returned" %>
+              <% } else if (today > dueDate) { %>
+                <% status = "Overdue" %>
+              <% } else { %>
+                <% status = "Borrowed" %>
+              <% } %>
+              <td class="py-2 px-4 w-1/21 text-[#27292b] text-center"><%= status %></td>
+              <td class="text-right w-2/21 py-2 pe-2 text-[#27292b]">
+                  <div class="flex flex-row gap-2">
+                      <button data-id="<%= borrows[i]["id"]%>" class="ms-auto editBtn hover:cursor-pointer hover:bg-[#22D3EE] rounded-4xl p-1.5">
+                          <img src="./images/edit.png" alt="" class="h-4 w-4 ms-auto">
+                      </button>
+                      <button data-id="<%= borrows[i]["id"]%>" class="hover:cursor-pointer deleteBtn hover:bg-[#F43F5E] p-1.5 rounded-4xl">
+                          <img src="./images/delete.png" alt="" class="h-4 w-4">
+                      </button>
+                  </div>
+              </td>
+            </tr>
+            <% } %>
+          </table>
+          <hr class="mt-4 border-[#DCE0E5]">
+          <div class="flex flex-row mt-4 text-black">
+            <p id="infoText"></p>
+            <div class="flex flex-row ms-auto gap-8">
+              <button id="prevBtn">Previous</button>
+              <button id="nextBtn">Next</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
+<script>
+  const modal = document.getElementById("modal");
+  const closeModal = document.getElementById("closeModal");
+  const addBook = document.getElementById("addBook");
+
+  closeModal.addEventListener("click", () => {
+    modal.classList.add("hidden");
+    console.log(borrowDate.value);
+  })
+
+  addBook.addEventListener("click", () => {
+    modal.classList.remove("hidden");
+  })
+
+  const bookTable = document.getElementById("bookTable");
+  const addBookForm = document.getElementById("addBookForm");
+
+  addBorrowerForm.addEventListener('submit', async(e) => {
+    e.preventDefault();
+
+    const formData = new FormData(addBorrowerForm);
+
+    const data = {
+      book: formData.get('book'),
+      borrowerName: formData.get('borrowerName'),
+      borrowDate: formData.get('borrowDate'),
+      dueDate: formData.get('dueDate'),
+    };
+
+    if (!data.book || !data.borrowerName || !data.borrowDate || !data.dueDate){
+      alert("Please fill in all the fields!");
+      return;
+    }
+
+    try {
+      const res = await fetch('/borrow', {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+
+      const newBook = await res.json();
+      const book = newBook.rows;
+      
+      const borrowDate = new Date(book[0]['borrow_date']);
+      
+      const borrowDateFormatted = borrowDate.toLocaleDateString('en-US', {
+        month: 'short',
+        day: '2-digit',
+        year: 'numeric'
+      });
+
+      const dueDate = new Date(book[0]['due_date']);
+      
+      const dueDateFormatted = dueDate.toLocaleDateString('en-US', {
+        month: 'short',
+        day: '2-digit',
+        year: 'numeric'
+      });
+      
+      console.log(book);
+
+      const row = document.createElement("tr");
+
+      row.classList.add('text-[#5A6672]', "book", 'font-light', 'font-[DM_Sans]', 'rounded', 'border', 'border-[#DCE0E5]', 'w-full')
+
+      row.innerHTML = `
+        <td class="py-2 px-4 w-3/21 text-sm text-[#27292b]">${book[0]['borrower']}</td>
+        <td class="py-2 px-4 w-4/21 text-[#27292b] text-center">${book[0]['book_title']}</td>
+        <td class="py-2 px-4 w-3/21 text-[#27292b] text-center">${borrowDateFormatted}</td>
+        <td class="py-2 px-4 w-3/21 text-[#27292b] text-center"> --</td>
+        <td class="py-2 px-4 w-3/21 text-[#27292b] text-center">${dueDateFormatted}</td>
+        <td class="py-2 px-4 w-1/21 text-[#27292b] text-center">Borrowed</td>
+        <td class="text-right w-2/21 py-2 pe-4 text-[#27292b]"><div class="flex flex-row gap-2">
+        <button data-id="${book[0]['id']}" class="ms-auto editBtn hover:cursor-pointer hover:bg-[#22D3EE] rounded-4xl p-1.5">
+            <img src="./images/edit.png" alt="" class="h-4 w-4 ms-auto">
+        </button>
+        <button data-id="${book[0]['id']}" class="hover:cursor-pointer deleteBtn hover:bg-[#F43F5E] p-1.5 rounded-4xl">
+            <img src="./images/delete.png" alt="" class="h-4 w-4">
+        </button></div></td>
+      `
+
+      bookTable.appendChild(row);
+
+      addBorrowerForm.reset();
+      modal.classList.add("hidden");
+
+    }
+    catch (err){
+      console.error(err);
+    }
+
+  });
+
+  const searchBar = document.getElementById("searchBar");
+
+  
+  const editModal = document.getElementById("editModal");
+  const closeEditModal = document.getElementById("closeEditModal");
+  const editTitle = document.getElementById("editTitle");
+  const editAuthor = document.getElementById("editAuthor");
+  const editGenre = document.getElementById("editGenre");
+  const editYear = document.getElementById("editYear");
+  const editCopies = document.getElementById("editCopies");
+
+  closeEditModal.addEventListener('click', () => {
+    editModal.classList.add("hidden");
+  })
+
+  const editBtns = document.querySelectorAll(".editBtn");
+  
+  const editAuthorId = document.getElementById("editAuthorId");
+  
+  editBtns.forEach(btn => {
+    btn.addEventListener('click', async() => {
+      
+      const id = btn.dataset.id;
+      console.log(id);
+      
+      try {
+        const res = await fetch(`/borrow/${id}`, {
+          method: "GET",
+          headers: {
+            'Content-Type': 'application/json'
+          },
+        });
+        const borrow = await res.json();
+        const borrowDetails = borrow[0];
+        
+        console.log(borrowDetails);
+        console.log(borrowDetails['borrow_date']);
+        
+        const borrowDate = new Date(borrowDetails['borrow_date']);
+        const borrowDateFormatted = borrowDate.toISOString().split('T')[0];
+        
+        const dueDate = new Date(borrowDetails['due_date']);
+        const dueDateFormatted = dueDate.toISOString().split('T')[0];
+        
+        editBook.value = borrowDetails['book_title'];
+        editBorrowerName.value = borrowDetails['borrower'];
+        editBorrowDate.value = borrowDateFormatted;
+        editDueDate.value = dueDateFormatted;
+        editId.value = borrowDetails['id'];
+        
+        console.log(borrowDetails['borrow_date']);
+      }
+      catch (err){
+        console.error(err);
+      }
+      
+      editModal.classList.remove("hidden");      
+    })
+  })
+  
+  const editSubmitBtn = document.getElementById("editSubmitBtn");
+  
+  editSubmitBtn.addEventListener('click', async() => {
+    const id = editId.value;
+    const title = editTitle.value;
+    const author = editAuthorId.value;
+    const genre = editGenre.value;
+    const year = editYear.value;
+    const copies = editCopies.value;
+    
+    console.log(editAuthor.value);
+    try {
+      const res = await fetch(`/borrow/${id}`, {
+        method: "PUT",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          title,
+          author,
+          genre,
+          year,
+          copies,
+        })
+      });
+      const book = await res.json();
+      console.log(book);
+      
+      editModal.classList.add("hidden")
+      
+    }
+    catch (err){
+      console.error(err);
+    }    
+  })
+  
+  const deleteBtns = document.querySelectorAll(".deleteBtn");
+  const deleteModal = document.getElementById("deleteModal");
+  const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
+  const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
+  
+  cancelDeleteBtn.addEventListener('click', () => {
+    deleteModal.classList.add("hidden");
+  });
+  
+  const rows = document.querySelectorAll("tr.borrow");
+  const rowsPerPage = 5;
+  
+  let currentPage = 1;
+  const totalRows = rows.length;
+  const totalPages = Math.ceil(totalRows / rowsPerPage);
+  
+  function showPage(page) {
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+  
+    rows.forEach((row, index) => {
+      if (index >= start && index < end) {
+        row.classList.remove("hidden");
+      } else {
+        row.classList.add("hidden");
+      }
+    });
+  
+    updateInfo(start, end);
+  }
+  
+  const infoText = document.getElementById("infoText");
+  
+  function updateInfo(start, end) {
+    const showingStart = start + 1;
+    const showingEnd = Math.min(end, totalRows);
+  
+    infoText.textContent = `Showing ${showingStart} to ${showingEnd} of ${totalRows} entries`;
+  }
+  
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
+  
+  prevBtn.addEventListener("click", () => {
+    if (currentPage > 1) {
+      currentPage--;
+      showPage(currentPage);
+    }
+  });
+  
+  nextBtn.addEventListener("click", () => {
+    if (currentPage < totalPages) {
+      currentPage++;
+      showPage(currentPage);
+    }
+  });
+  
+  showPage(currentPage);
+
+  
+  deleteBtns.forEach(btn => {
+    btn.addEventListener('click', async() => {
+      const id = btn.dataset.id;
+      console.log(id);
+      
+      deleteModal.classList.remove("hidden");
+      
+      confirmDeleteBtn.addEventListener('click', async() => {
+        try {
+          const res = await fetch(`/borrow/${id}`, {
+            method: "DELETE",
+            headers: {
+              'Content-Type': 'application/json'
+            },
+          });
+          const book = await res.json();
+          console.log(book);
+          
+          btn.closest("tr").classList.add("hidden");
+          deleteModal.classList.add("hidden");   
+        }
+        catch (err){
+          console.error(err);
+        }
+      })
+    })
+  });
+  
+  const borrows = document.querySelectorAll("tr.borrow");
+  
+  searchBar.addEventListener("input", () => {
+    const value = searchBar.value.toLowerCase();
+    
+    borrows.forEach(borrow => {
+      const text = borrow.textContent.toLowerCase();
+      if (text.includes(value)) {
+        borrow.classList.remove("hidden");
+      } else {
+        borrow.classList.add("hidden");
+      }
+    })
+  })
+
+</script>
