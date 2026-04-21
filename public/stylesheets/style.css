@@ -345,11 +345,29 @@
   .w-48 {
     width: calc(var(--spacing) * 48);
   }
+  .w-\[0vw\] {
+    width: 0vw;
+  }
   .w-\[40vw\] {
     width: 40vw;
   }
   .w-\[50vw\] {
     width: 50vw;
+  }
+  .w-\[60vw\] {
+    width: 60vw;
+  }
+  .w-\[60w\] {
+    width: 60w;
+  }
+  .w-\[65vw\] {
+    width: 65vw;
+  }
+  .w-\[65w\] {
+    width: 65w;
+  }
+  .w-\[vw\] {
+    width: vw;
   }
   .w-full {
     width: 100%;
