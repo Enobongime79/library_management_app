@@ -9,7 +9,16 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Lora:ital,wght@0,400..700;1,400..700&family=Manrope:wght@200..800&family=Vend+Sans:ital,wght@0,300..700;1,300..700&family=Zalando+Sans+SemiExpanded:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
   </head>
   <body>
-
+      
+    <div id="overlay" class="w-screen lg:hidden h-screen z-100 hidden absolute bg-black/75">
+        <div class="flex-col items-center gap-2 p-2 bg-white w-[50vw] h-full font-[DM_Sans] pt-8">
+            <img id="closeSidebar" src="./images/close.png" class="h-5 ms-auto me-2 mb-4" alt="">
+            <a href="/authors" class="flex flex-row items-center gap-2 p-2 hover:bg-[#F3F4F6] hover:cursor-pointer rounded-lg w-48"> <img src="./images/writer.png" class="h-4" alt="">Authors</a>
+            <a href="/books" class="flex flex-row items-center gap-2 p-2 hover:bg-[#F3F4F6] hover:cursor-pointer rounded-lg w-48"> <img src="./images/book.png" class="h-4" alt="">Books</a>
+            <a href="/borrow" class="flex flex-row items-center gap-2 p-2 hover:bg-[#F3F4F6] hover:cursor-pointer bg-[#F3F4F6] rounded-lg w-48"> <img src="./images/time-left.png" class="h-4" alt="">Borrow Records</a>            
+        </div>
+    </div>
+      
     <div id="modal" class="bg-black/80 hidden fixed top-0 h-full items-center flex justify-center w-full z-100 font-[Zalando_Sans_SemiExpanded]">
       <form method="post" action="/borrow" id="addBorrowerForm" class="bg-white lg:w-1/3 w-7/8 rounded-lg px-4 pt-4 flex flex-col pb-4">
         <h1 class="font-bold text-2xl">Add Borrow Record</h1>
@@ -41,6 +50,8 @@
                 <p class="text-xs font-[DM_Sans] mt-2 text-gray-500">Leave blank if not yet returned.</p>
             </div>
         </div>
+        
+        
 
         <div class="ms-auto text-sm mt-4 items-center flex flex-row gap-4">
           <button type="button" id="closeModal" class="px-4 py-2 rounded border border-[#DCE0E5] hover:bg-black font-semibold hover:text-white">Cancel</button>
@@ -111,13 +122,13 @@
     </div>
     
     <div class="flex sticky top-0 bg-white w-full flex-row py-4 px-4 px-lg-6 font-[Zalando_Sans_SemiExpanded] border-b-[#E6E9ED] items-center border-b">
-      <img class="md:hidden h-4" src="./images/more.png" alt="">
+      <img id="sidebarToggle" class="md:hidden h-4" src="./images/more.png" alt="">
       <p class="ms-5 text-blue-500 font-bold text-xl">Library Admin</p>
       
       <button id="logoutBtn" class="text-black ms-auto me-5 text-sm hover:cursor-pointer hover:bg-black hover:text-white bg-blue-100 border border-[#DCE0E5] px-4 py-2 rounded-lg items-center flex flex-row"><a href="/logout">Logout</a></button>
     </div>
     <div class="flex-row  lg:flex font-[Zalando_Sans_SemiExpanded] ">
-      <div class="w-1/6 hidden lg:flex pt-12 px-4 font-[DM_Sans] bg-[#F9FAFB] h-screen border-e border-e-[#E6E9ED]">
+      <div id="sidebar" class="w-1/6 hidden lg:flex pt-12 px-4 font-[DM_Sans] bg-[#F9FAFB] h-screen border-e border-e-[#E6E9ED]">
         <div class="flex flex-col items-center text-[#74797e] gap-1">
           <a href="/authors" class="flex flex-row items-center gap-2 p-2 hover:bg-[#F3F4F6] hover:cursor-pointer rounded-lg w-48"> <img src="./images/writer.png" class="h-4" alt="">Authors</a>
           <a href="/books" class="flex flex-row items-center gap-2 p-2 hover:bg-[#F3F4F6] hover:cursor-pointer rounded-lg w-48"> <img src="./images/book.png" class="h-4" alt="">Books</a>
@@ -501,6 +512,19 @@
         borrow.classList.add("hidden");
       }
     })
+  })
+  
+  const sidebarToggle = document.getElementById("sidebarToggle");
+  const overlay = document.getElementById("overlay");
+  const closeSidebar = document.getElementById("closeSidebar")
+  
+  sidebarToggle.addEventListener("click", () => {
+    overlay.classList.toggle("hidden");
+    overlay.classList.add("lg:hidden");
+  })
+  
+  closeSidebar.addEventListener("click", () => {
+    overlay.classList.toggle("hidden");
   })
 
 </script>
